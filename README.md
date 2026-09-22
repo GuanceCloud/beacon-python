@@ -10,7 +10,7 @@ Beacon Python 是 GuanceCloud 基于完整 OpenTelemetry Python Contrib 源码�
 - [源码来源与上游基线](beacon/upstream.lock.json)
 - [同步 OpenTelemetry](beacon/UPSTREAM.md)
 - [发行准备](beacon/RELEASING.md)
-- [自有发行包与 `gtrace` 命令](guance-opentelemetry-distro/)
+- [上游自动插桩发行包](opentelemetry-distro/)
 - [Profiling 扩展](sdk-extension/guance-sdk-extension-profiling/)
 - [贡献指南](CONTRIBUTING.md)
 

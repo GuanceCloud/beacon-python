@@ -11,7 +11,6 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "guance-opentelemetry-distro",
     "guance-sdk-extension-profiling",
     "opentelemetry-distro",
     "opentelemetry-exporter-credential-provider-gcp",
@@ -2094,35 +2093,6 @@ wheels = [
 ]
 
 [[package]]
-name = "guance-opentelemetry-distro"
-source = { editable = "guance-opentelemetry-distro" }
-dependencies = [
-    { name = "guance-sdk-extension-profiling" },
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-contrib-instrumentations" },
-    { name = "opentelemetry-exporter-otlp" },
-    { name = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-sdk" },
-]
-
-[package.optional-dependencies]
-profiling = [
-    { name = "guance-sdk-extension-profiling" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "guance-sdk-extension-profiling", editable = "sdk-extension/guance-sdk-extension-profiling" },
-    { name = "guance-sdk-extension-profiling", marker = "extra == 'profiling'", editable = "sdk-extension/guance-sdk-extension-profiling" },
-    { name = "opentelemetry-api", git = "https://github.com/open-telemetry/opentelemetry-python?subdirectory=opentelemetry-api&tag=v1.44.0" },
-    { name = "opentelemetry-contrib-instrumentations", specifier = "==0.65b0" },
-    { name = "opentelemetry-exporter-otlp", git = "https://github.com/open-telemetry/opentelemetry-python?subdirectory=exporter%2Fopentelemetry-exporter-otlp&tag=v1.44.0" },
-    { name = "opentelemetry-instrumentation", editable = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-sdk", git = "https://github.com/open-telemetry/opentelemetry-python?subdirectory=opentelemetry-sdk&tag=v1.44.0" },
-]
-provides-extras = ["profiling"]
-
-[[package]]
 name = "guance-sdk-extension-profiling"
 source = { editable = "sdk-extension/guance-sdk-extension-profiling" }
 dependencies = [
@@ -3090,68 +3060,6 @@ version = "1.44.0"
 source = { git = "https://github.com/open-telemetry/opentelemetry-python?subdirectory=opentelemetry-api&tag=v1.44.0#53a5a40c9604583c501bcf13970a635f00e62df4" }
 dependencies = [
     { name = "typing-extensions" },
-]
-
-[[package]]
-name = "opentelemetry-contrib-instrumentations"
-version = "0.65b0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "opentelemetry-instrumentation-aio-pika" },
-    { name = "opentelemetry-instrumentation-aiohttp-client" },
-    { name = "opentelemetry-instrumentation-aiohttp-server" },
-    { name = "opentelemetry-instrumentation-aiokafka" },
-    { name = "opentelemetry-instrumentation-aiopg" },
-    { name = "opentelemetry-instrumentation-asgi" },
-    { name = "opentelemetry-instrumentation-asyncclick" },
-    { name = "opentelemetry-instrumentation-asyncio" },
-    { name = "opentelemetry-instrumentation-asyncpg" },
-    { name = "opentelemetry-instrumentation-aws-lambda" },
-    { name = "opentelemetry-instrumentation-boto3sqs" },
-    { name = "opentelemetry-instrumentation-botocore" },
-    { name = "opentelemetry-instrumentation-cassandra" },
-    { name = "opentelemetry-instrumentation-celery" },
-    { name = "opentelemetry-instrumentation-click" },
-    { name = "opentelemetry-instrumentation-confluent-kafka" },
-    { name = "opentelemetry-instrumentation-dbapi" },
-    { name = "opentelemetry-instrumentation-django" },
-    { name = "opentelemetry-instrumentation-exceptions" },
-    { name = "opentelemetry-instrumentation-falcon" },
-    { name = "opentelemetry-instrumentation-fastapi" },
-    { name = "opentelemetry-instrumentation-flask" },
-    { name = "opentelemetry-instrumentation-grpc" },
-    { name = "opentelemetry-instrumentation-httpx" },
-    { name = "opentelemetry-instrumentation-jinja2" },
-    { name = "opentelemetry-instrumentation-kafka-python" },
-    { name = "opentelemetry-instrumentation-logging" },
-    { name = "opentelemetry-instrumentation-mysql" },
-    { name = "opentelemetry-instrumentation-mysqlclient" },
-    { name = "opentelemetry-instrumentation-pika" },
-    { name = "opentelemetry-instrumentation-psycopg" },
-    { name = "opentelemetry-instrumentation-psycopg2" },
-    { name = "opentelemetry-instrumentation-pymemcache" },
-    { name = "opentelemetry-instrumentation-pymongo" },
-    { name = "opentelemetry-instrumentation-pymssql" },
-    { name = "opentelemetry-instrumentation-pymysql" },
-    { name = "opentelemetry-instrumentation-pyramid" },
-    { name = "opentelemetry-instrumentation-redis" },
-    { name = "opentelemetry-instrumentation-remoulade" },
-    { name = "opentelemetry-instrumentation-requests" },
-    { name = "opentelemetry-instrumentation-sqlalchemy" },
-    { name = "opentelemetry-instrumentation-sqlite3" },
-    { name = "opentelemetry-instrumentation-starlette" },
-    { name = "opentelemetry-instrumentation-structlog" },
-    { name = "opentelemetry-instrumentation-system-metrics" },
-    { name = "opentelemetry-instrumentation-threading" },
-    { name = "opentelemetry-instrumentation-tornado" },
-    { name = "opentelemetry-instrumentation-tortoiseorm" },
-    { name = "opentelemetry-instrumentation-urllib" },
-    { name = "opentelemetry-instrumentation-urllib3" },
-    { name = "opentelemetry-instrumentation-wsgi" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/34/e6/699dfb055595b6614e227b8e609d71e92cd5b90cdd44480e342087034cdf/opentelemetry_contrib_instrumentations-0.65b0.tar.gz", hash = "sha256:16b7c0d8e3383145d58da47c8d02e14668bba2423d348026fbcc2b86f03e5102", size = 6066, upload-time = "2026-07-16T15:25:47.334Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/77/a0/3360305f793b1835610b35b1b20926f7b9e837ad2af91704e7547faa1396/opentelemetry_contrib_instrumentations-0.65b0-py3-none-any.whl", hash = "sha256:878880d9b8ff88e0f5c0a04feb29b60b164bf58df174035e48e5471af896f338", size = 6371, upload-time = "2026-07-16T15:24:46.353Z" },
 ]
 
 [[package]]

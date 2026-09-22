@@ -86,7 +86,6 @@ opentelemetry-instrumentation = { workspace = true }
 opentelemetry-exporter-prometheus-remote-write = { workspace = true }
 opentelemetry-exporter-richconsole = { workspace = true }
 guance-sdk-extension-profiling = { workspace = true }
-guance-opentelemetry-distro = { workspace = true }
 opentelemetry-instrumentation-aio-pika = { workspace = true }
 opentelemetry-instrumentation-aiohttp-client = { workspace = true }
 opentelemetry-instrumentation-aiohttp-server = { workspace = true }
@@ -150,7 +149,6 @@ members = [
   "sdk-extension/*",
   "opentelemetry-instrumentation",
   "opentelemetry-distro",
-  "guance-opentelemetry-distro",
   "propagator/*",
   "util/*",
 ]

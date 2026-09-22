@@ -23,12 +23,6 @@ Installation
 
     pip install guance-sdk-extension-profiling
 
-or install it through the distro extra:
-
-::
-
-    pip install guance-opentelemetry-distro[profiling]
-
 Usage
 -----
 

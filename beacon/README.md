@@ -8,7 +8,7 @@
 
 | 内容 | 位置 |
 | --- | --- |
-| 自有发行包与 `gtrace` 命令 | [guance-opentelemetry-distro](../guance-opentelemetry-distro/) |
+| 上游自动插桩发行包 | [opentelemetry-distro](../opentelemetry-distro/) |
 | 自有 Profiling 扩展 | [guance-sdk-extension-profiling](../sdk-extension/guance-sdk-extension-profiling/) |
 | 上游自动插桩及测试 | [instrumentation](../instrumentation/) |
 | 构建与贡献约定 | [CONTRIBUTING.md](../CONTRIBUTING.md) |
@@ -18,7 +18,7 @@
 
 ```bash
 uvx --from uv==0.12.1 uv lock --check
-uvx --from uv==0.12.1 uv run --frozen --package guance-opentelemetry-distro --with pytest pytest -q guance-opentelemetry-distro/tests sdk-extension/guance-sdk-extension-profiling/tests
+uvx --from uv==0.12.1 uv run --frozen --package guance-sdk-extension-profiling --with pytest pytest -q sdk-extension/guance-sdk-extension-profiling/tests
 ```
 
-目前仅完成上述自有包测试，尚未完成完整上游测试矩阵、DataKit 接收端兼容、运行环境矩阵和候选制品验收。继承的 `gtrace`、Profiling 源码及示例仍使用原有 Guance 命名；既有 PyPI Guance 包不属于 Beacon 发行。当前源码已改变依赖和行为，但仍保留旧包版本号，仅供开发验证，不得以同名同版本覆盖既有制品。Beacon 产品制品身份与发布方式须在发行前明确，不应把继承的上游或旧仓库发布流程当作 Beacon 发行入口。
+目前仅完成 Profiling 扩展测试，尚未完成完整上游测试矩阵、DataKit 接收端兼容、运行环境矩阵和候选制品验收。旧 `gtrace` 发行包已从本仓库移除；Profiling 源码及示例仍使用原有 Guance 命名，既有 PyPI Guance 包不属于 Beacon 发行。Profiling 源码已改变依赖和行为，但仍保留旧包版本号，仅供开发验证，不得以同名同版本覆盖既有制品。Beacon 产品制品身份与发布方式须在发行前明确，不应把继承的上游或旧仓库发布流程当作 Beacon 发行入口。
