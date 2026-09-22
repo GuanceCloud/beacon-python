@@ -420,7 +420,9 @@ def _build_profiled_sync_class(
 ) -> type[Any]:
     class _ProfiledSyncPrimitive(original_class):  # type: ignore[misc, valid-type]
         def __init__(self, *args: Any, **kwargs: Any) -> None:
-            super().__init__(*args, **kwargs)
+            # Python 3.10 BoundedSemaphore resolves the patched global
+            # Semaphore.__init__ on an instance outside that wrapper's MRO.
+            original_class.__init__(self, *args, **kwargs)
             self._otel_profiled_state = _ProfiledPrimitiveState(
                 collector,
                 lock_kind=lock_kind,

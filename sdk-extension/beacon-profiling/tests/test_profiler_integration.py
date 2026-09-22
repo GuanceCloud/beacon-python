@@ -8,6 +8,9 @@ from time import sleep
 from opentelemetry.proto.collector.profiles.v1development.profiles_service_pb2 import (
     ExportProfilesServiceRequest,
 )
+from opentelemetry.sdk.extension.profiling.collector.exception import (
+    HAS_MONITORING,
+)
 from opentelemetry.sdk.extension.profiling.export.http import (
     OTLPHTTPProfileExporter,
 )
@@ -166,18 +169,18 @@ def test_profiler_exports_multiple_profile_types_end_to_end():
         string_table[profile.sample_type.type_strindex] for profile in profiles
     }
 
-    assert profile_types.issuperset(
-        {
-            "samples",
-            "exceptions",
-            "lock.acquire.duration",
-            "lock.hold.duration",
-            "lock.wait.duration",
-            "memory.heap.bytes",
-            "memory.heap.objects",
-        }
-    )
-    assert "exception.message" in string_table
+    expected_types = {
+        "samples",
+        "lock.acquire.duration",
+        "lock.hold.duration",
+        "lock.wait.duration",
+        "memory.heap.bytes",
+        "memory.heap.objects",
+    }
+    if HAS_MONITORING:
+        expected_types.add("exceptions")
+        assert "exception.message" in string_table
+    assert profile_types.issuperset(expected_types)
     assert "memory.heap.bytes" in string_table
     assert "memory.heap.objects" in string_table
     assert "test_profiler_integration.py:" in " ".join(string_table)
@@ -187,7 +190,8 @@ def test_profiler_exports_multiple_profile_types_end_to_end():
         for attribute in request.dictionary.attribute_table
         if attribute.value.HasField("string_value")
     }
-    assert "boom" in attribute_strings
+    if HAS_MONITORING:
+        assert "boom" in attribute_strings
     assert "threading.Lock" in attribute_strings
     assert "threading.Condition" in attribute_strings
     assert "process" in attribute_strings

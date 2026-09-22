@@ -3,10 +3,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "beacon-profiling"
+name = "beacon-otel"
 dynamic = ["version"]
-description = "Beacon Profiling for OpenTelemetry Python"
-readme = "README.rst"
+description = "Beacon Python auto-instrumentation distribution"
+readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
 authors = [
@@ -29,29 +29,37 @@ dependencies = [
   "opentelemetry-sdk == 1.44.0",
   "opentelemetry-instrumentation == 0.65b0",
   "opentelemetry-exporter-otlp == 1.44.0",
-  "requests >= 2.20",
 ]
 
-[project.entry-points.opentelemetry_pre_instrument]
-profiling = "opentelemetry.sdk.extension.profiling.bootstrap:auto_start"
+[project.optional-dependencies]
+profiling = ["beacon-profiling == 0.1.0.dev0"]
+requests = ["opentelemetry-instrumentation-requests == 0.65b0"]
+flask = ["opentelemetry-instrumentation-flask == 0.65b0"]
+fastapi = ["opentelemetry-instrumentation-fastapi == 0.65b0"]
 
-[project.entry-points.opentelemetry_environment_variables]
-profiling = "opentelemetry.sdk.extension.profiling.environment_variables"
+[project.scripts]
+beacon = "beacon_otel.cli:main"
+
+[project.entry-points.opentelemetry_distro]
+beacon = "beacon_otel.distro:BeaconDistro"
+
+[project.entry-points.opentelemetry_configurator]
+beacon = "beacon_otel.distro:BeaconConfigurator"
 
 [project.urls]
-Homepage = "https://github.com/GuanceCloud/beacon-python/tree/main/sdk-extension/beacon-profiling"
+Homepage = "https://github.com/GuanceCloud/beacon-python/tree/main/beacon-otel"
 Repository = "https://github.com/GuanceCloud/beacon-python"
 
 [tool.hatch.version]
-path = "src/opentelemetry/sdk/extension/profiling/version.py"
+path = "src/beacon_otel/version.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
   "/src",
   "/tests",
-  "/README.rst",
+  "/README.md",
   "/LICENSE",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/opentelemetry"]
+packages = ["src/beacon_otel"]

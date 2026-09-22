@@ -1,0 +1,81 @@
+name: Publish Beacon Python
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: startsWith(github.ref, 'refs/tags/beacon-v') && vars.BEACON_PYPI_RELEASE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.13"
+      - name: Check release tag
+        run: python beacon/scripts/check-version.py --tag "$GITHUB_REF_NAME"
+      - name: Build distributions
+        run: |
+          uv build --package beacon-profiling --out-dir dist/profiling
+          uv build --package beacon-otel --out-dir dist/otel
+          uvx twine check dist/profiling/* dist/otel/*
+          python beacon/scripts/check-version.py \
+            --wheel dist/profiling/beacon_profiling-*.whl \
+            --wheel dist/otel/beacon_otel-*.whl
+      - name: Test built wheels
+        run: |
+          uv venv .beacon-test-env
+          uv pip install --python .beacon-test-env/bin/python \
+            --find-links dist/profiling --find-links dist/otel \
+            'beacon-otel[profiling,requests]' pytest
+          .beacon-test-env/bin/python -m pytest -q beacon/tests beacon-otel/tests
+          .beacon-test-env/bin/python -m pytest -q sdk-extension/beacon-profiling/tests
+      - uses: actions/upload-artifact@v5
+        with:
+          name: beacon-profiling-distributions
+          path: dist/profiling/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v5
+        with:
+          name: beacon-otel-distributions
+          path: dist/otel/
+          if-no-files-found: error
+
+  publish-profiling:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/beacon-profiling/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: beacon-profiling-distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+  publish-otel:
+    needs: publish-profiling
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/beacon-otel/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: beacon-otel-distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/

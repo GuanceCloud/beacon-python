@@ -1,6 +1,8 @@
 # 同步 OpenTelemetry Python Contrib
 
-命令均从仓库根目录执行。`main` 是 Beacon 下游主线；官方主线只用于发现更新，不直接替换 Beacon 的自有提交。首次导入的旧仓库及已采用的官方标签记录在[基线文件](upstream.lock.json)中，导入记录保持不变；只有完成新版本合并与验证后才更新 `upstream` 字段。
+命令均从仓库根目录执行。`main` 是 Beacon 下游主线；官方主线只用于发现更新，不直接替换 Beacon 的自有提交。首次导入的旧仓库及已采用的官方 Contrib、Core 标签记录在[基线文件](upstream.lock.json)中，导入记录保持不变；只有完成新版本合并与验证后才更新 `upstream` 和 `core` 字段。
+
+Beacon 下游的主 CI 入口是 [ci.yml](../.github/workflows/ci.yml)，只验证两个 Beacon 包；上游生成的可复用测试工作流保留作同步或专项验证，不直接成为 Beacon 日常发布门禁。上游同步时应保留此下游入口，不用生成脚本覆盖。
 
 ## Remote 配置
 
@@ -34,7 +36,7 @@ Remote、refspec 和远程跟踪引用是本地配置，不随 Git 提交。首�
 
 3. 在干净的 `main` 上新建同步分支，合并已核对的提交（保留合并提交，不 squash 整次上游同步），解决冲突并适配自有包。不要用新的上游树覆盖整个下游工作树。
 4. 同步核对根目录 [pyproject.toml](../pyproject.toml) 中的 Python Core 标签，重新生成并检查 [uv.lock](../uv.lock)。上游 Contrib 标签、Python Core 标签及依赖版本应作为一组兼容基线评审，不盲目改成 `main` 或最新版本。
-5. 运行自有包回归与受影响的上游测试，并按拟发行范围验证运行环境和接收端。完成后更新[基线文件](upstream.lock.json)的 `upstream` 字段并提交。确认目标提交已成为产品主线祖先：
+5. 运行自有包回归与受影响的上游测试，并按拟发行范围验证运行环境和接收端。完成后更新[基线文件](upstream.lock.json)的 `upstream` 和 `core` 字段，再运行 `python beacon/scripts/check-version.py` 核对实际依赖与记录。确认目标提交已成为产品主线祖先：
 
    ```bash
    git merge-base --is-ancestor <已核对的上游提交SHA> HEAD

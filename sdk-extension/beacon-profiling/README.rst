@@ -16,15 +16,19 @@ OTLP and supports multiple collector types:
 * heap snapshots via ``tracemalloc``
 * child-process restart after ``fork()``
 
+Handled-exception collection requires Python ``sys.monitoring`` (Python
+3.12+); on Python 3.10/3.11 the other collectors remain available.
+
 Usage
 -----
 
-Enable profiling for applications launched via ``opentelemetry-instrument``:
+Enable profiling for applications launched via ``beacon`` after installing
+``beacon-otel[profiling]``:
 
 ::
 
     export OTEL_PROFILING_ENABLED=true
-    opentelemetry-instrument python app.py
+    beacon python app.py
 
 Programmatic usage:
 
@@ -84,7 +88,7 @@ OTLP/HTTP:
     export OTEL_PROFILING_MEMORY_ENABLED=true
     export OTEL_EXPORTER_OTLP_PROFILES_PROTOCOL=http/protobuf
     export OTEL_EXPORTER_OTLP_PROFILES_ENDPOINT=http://localhost:4318/v1development/profiles
-    opentelemetry-instrument python app.py
+    beacon python app.py
 
 To dump pprof files instead of OTLP, set:
 
@@ -100,7 +104,7 @@ copy:
 
     export OTEL_PROFILING_PPROF_UPLOAD_URL=http://localhost:9529/profiling/v1/input
     export OTEL_PROFILING_PPROF_HEADERS="X-API-Key:xxx"
-    opentelemetry-instrument python app.py
+    beacon python app.py
 
 When ``OTEL_PROFILING_EXPORTER`` is unset and
 ``OTEL_PROFILING_PPROF_UPLOAD_URL`` is configured, the runtime
