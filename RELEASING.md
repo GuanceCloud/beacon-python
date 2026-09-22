@@ -1,5 +1,8 @@
 # Release instructions
 
+> [!NOTE]
+> This is the inherited OpenTelemetry Python Contrib release guide, retained for upstream reference only. Its release workflows are not present in Beacon Python. For Beacon release requirements, see [Beacon Python release preparation](beacon/RELEASING.md).
+
 ## Preparing a new major or minor release
 
 * Run the [Prepare release branch workflow](https://github.com/open-telemetry/opentelemetry-python-contrib/actions/workflows/prepare-release-branch.yml).
@@ -30,7 +33,7 @@
 >
 > These libraries are also excluded from the general release.
 
-Package release preparation is handled by the [`[Package] Prepare release`](./.github/workflows/package-prepare-release.yml) workflow that allows
+Package release preparation is handled upstream by the [`[Package] Prepare release`](https://github.com/open-telemetry/opentelemetry-python-contrib/actions/workflows/package-prepare-release.yml) workflow that allows
 to pick a specific package to release. It follows the same versioning strategy and process as the general release.
 
 Long-term package release branch follows `package-release/{package-name}/v{major}.{minor}.x` (or `package-release/{package-name}/v{major}.{minor}bx`) naming pattern.
@@ -67,7 +70,7 @@ To use the workflow to backport pull request(s) to the release branch:
 > Per-package release is supported only for packages included in the corresponding workflow. Libraries that support per-package release are currently
 > excluded from the general patch release.
 
-Per-package patch release preparation is handled by the [`[Package] Prepare patch release`](./.github/workflows/package-prepare-patch-release.yml) workflow that allows
+Per-package patch release preparation is handled upstream by the [`[Package] Prepare patch release`](https://github.com/open-telemetry/opentelemetry-python-contrib/actions/workflows/package-prepare-patch-release.yml) workflow that allows
 to pick a specific package to release.
 
 The workflow can only be run against long-term release branch such as `package-release/{package-name}/v{major}.{minor}.x` or `package-release/{package-name}/v{major}.{minor}bx`.
@@ -101,7 +104,7 @@ The workflow will create a pull request that should be merged in order to procee
 >
 > These libraries are also excluded from the general patch release.
 
-Per-package release is handled by the [`[Package] Release`](./.github/workflows/package-release.yml) workflow that allows
+Per-package release is handled upstream by the [`[Package] Release`](https://github.com/open-telemetry/opentelemetry-python-contrib/actions/workflows/package-release.yml) workflow that allows
 to pick a specific package to release.
 
 The workflow can only be run against long-term release branch such as `package-release/{package-name}/v{major}.{minor}.x` or `package-release/{package-name}/v{major}.{minor}bx`.

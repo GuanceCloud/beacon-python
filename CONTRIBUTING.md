@@ -33,7 +33,6 @@ If you are using AI agents to assist with contributions, please read [AGENTS.md]
     - [How to Receive Comments](#how-to-receive-comments)
     - [How to Get PRs Reviewed](#how-to-get-prs-reviewed)
     - [How to Get PRs Merged](#how-to-get-prs-merged)
-    - [Stale PRs](#stale-prs)
   - [Design Choices](#design-choices)
     - [Focus on Capabilities, Not Structure Compliance](#focus-on-capabilities-not-structure-compliance)
   - [Running Tests Locally](#running-tests-locally)
@@ -286,12 +285,6 @@ towncrier build --draft --version Unreleased
 The CI will verify that a changelog fragment exists and that `CHANGELOG.md` files are not directly modified.
 
 If your change does not need a changelog entry, add the "Skip Changelog" label to the PR.
-
-### Stale PRs
-
-PRs with no activity for 14 days will be automatically marked as stale and closed after a further 14 days of inactivity. To prevent a PR from being marked stale, ensure there is regular activity (commits, comments, reviews, etc).
-
-Project managers can also exempt a PR from this by applying one of the following labels: `hold`, `WIP`, `blocked-by-spec`, `do not merge`.
 
 ## Design Choices
 
