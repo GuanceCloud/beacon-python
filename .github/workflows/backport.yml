@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   backport:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     permissions:
       contents: write # required for pushing branches
       pull-requests: write # required for creating pull requests

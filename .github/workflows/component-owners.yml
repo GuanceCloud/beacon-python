@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   run_self:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     runs-on: ubuntu-latest
     name: Auto Assign Owners
     permissions: 

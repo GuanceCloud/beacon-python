@@ -1,6 +1,10 @@
 Guance OpenTelemetry Distro
 ===========================
 
+This package predates Beacon Python. Its published Guance versions are
+not Beacon releases. The Beacon Python downstream source is currently in
+development; see ``../beacon/README.md`` in this repository for status.
+
 |pypi|
 
 .. |pypi| image:: https://badge.fury.io/py/guance-opentelemetry-distro.svg

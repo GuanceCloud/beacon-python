@@ -1,6 +1,10 @@
 Guance SDK Extension for Python Profiling
 =========================================
 
+This package predates Beacon Python. Its published Guance versions are
+not Beacon releases. The Beacon Python downstream source is currently in
+development; see ``../../beacon/README.md`` in this repository for status.
+
 This package provides a Python profiling runtime for OpenTelemetry
 auto-instrumentation. The current implementation exports profiles via
 OTLP and supports multiple collector types:

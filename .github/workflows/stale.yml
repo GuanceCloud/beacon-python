@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   stale:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     permissions:
       contents: read
       issues: write

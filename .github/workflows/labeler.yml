@@ -8,6 +8,7 @@ permissions:
 
 jobs:
   label:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     runs-on: ubuntu-latest
     permissions:
       contents: read

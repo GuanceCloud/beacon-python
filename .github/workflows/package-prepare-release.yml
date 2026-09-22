@@ -23,6 +23,7 @@ permissions:
 run-name: "[Package][${{ inputs.package }}] Prepare release"
 jobs:
   prereqs:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.verify.outputs.version }}
@@ -93,6 +94,7 @@ jobs:
           echo "next_version=$next_version" >> $GITHUB_OUTPUT
 
   create-pull-request-against-release-branch:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     runs-on: ubuntu-latest
     needs: prereqs
     permissions:
@@ -158,6 +160,7 @@ jobs:
                        --base $RELEASE_BRANCH_NAME
 
   create-pull-request-against-main:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     runs-on: ubuntu-latest
     needs: prereqs
     permissions:

@@ -39,8 +39,8 @@ profiling = "opentelemetry.sdk.extension.profiling.bootstrap:auto_start"
 profiling = "opentelemetry.sdk.extension.profiling.environment_variables"
 
 [project.urls]
-Homepage = "https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/sdk-extension/guance-sdk-extension-profiling"
-Repository = "https://github.com/open-telemetry/opentelemetry-python-contrib"
+Homepage = "https://github.com/GuanceCloud/beacon-python/tree/main/sdk-extension/guance-sdk-extension-profiling"
+Repository = "https://github.com/GuanceCloud/beacon-python"
 
 [tool.hatch.version]
 path = "src/opentelemetry/sdk/extension/profiling/version.py"

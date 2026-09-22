@@ -11,7 +11,7 @@ jobs:
   add-to-project:
     name: add to project board
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib' && github.event.pull_request.draft == false
     steps:
       # NOTE: do NOT add an actions/checkout step here. This workflow uses
       # pull_request_target (which has access to secrets) but must never

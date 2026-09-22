@@ -21,6 +21,7 @@ permissions:
 run-name: "[Package][${{ inputs.package }}] Release"
 jobs:
   release:
+    if: github.repository == 'open-telemetry/opentelemetry-python-contrib'
     permissions:
       contents: write # required for creating releases
       pull-requests: write # required for creating pull requests

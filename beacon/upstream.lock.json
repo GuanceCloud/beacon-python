@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "import": {
+    "repository": "https://github.com/GuanceCloud/opentelemetry-python-contrib.git",
+    "branch": "gtrace",
+    "commit": "40b90737969d7dfd48a732a93a3a3734f55bff27"
+  },
+  "upstream": {
+    "repository": "https://github.com/open-telemetry/opentelemetry-python-contrib.git",
+    "releaseTag": "v0.65b0",
+    "releaseCommit": "a5470c666947acddc24fd4064ec7c1b169dfe8b6"
+  }
+}
