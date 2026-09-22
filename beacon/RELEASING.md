@@ -18,7 +18,7 @@
 3. 仅在实际验收通过后给已验证提交打 `beacon-v0.1.0rc1`（或正式版）标签并推送。手动在该标签上运行 `Publish Beacon Python`；构建和测试通过后先发布 Profiling，再发布主包。发布任务分别在受保护的 `pypi` 环境等待批准。PyPI 不允许覆盖同一版本，失败后修复应递增版本，不能重传已发布文件。
 4. 在 PyPI 核对两个包的版本和制品，再用全新虚拟环境从公开索引安装 `beacon-otel[profiling,requests]`，验证 `beacon --version`、应用自动插桩和目标 DataKit 接收。随后创建 GitHub Release，写明对应的 Contrib/Core 基线、已验证能力和环境、限制及回退方法；最后更新产品仓库的 Python 入口。
 
-当前第 2 步所需的 GitHub/PyPI 管理配置尚未完成，`BEACON_PYPI_RELEASE_ENABLED` 默认未启用；本仓库代码推送或开发制品构建均不会自动发布。
+GitHub 的 `pypi` Environment 已创建，限定 `beacon-v*` 标签并要求 `lrwh` 人工审核；PyPI 两个项目的 Trusted Publisher 尚未配置，`BEACON_PYPI_RELEASE_ENABLED` 也未启用。本仓库代码推送或开发制品构建均不会自动发布。
 
 首次发行前需要在本仓库确定并验证：
 
