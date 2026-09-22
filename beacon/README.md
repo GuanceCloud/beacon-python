@@ -26,4 +26,4 @@ uvx --from uv==0.12.1 uv run --frozen --package beacon-otel --with pytest pytest
 uvx --from uv==0.12.1 uv run --frozen --package beacon-profiling --with pytest pytest -q sdk-extension/beacon-profiling/tests
 ```
 
-目前已实现 `beacon-otel` 开发包、`beacon` 命令与 `beacon-profiling` 开发包，并完成其单元测试、Python 3.10–3.14 独立环境安装与启动冒烟验证；尚未完成完整上游测试矩阵、DataKit 后端入库确认、各 Python 版本的完整功能矩阵和正式候选制品验收。旧 `gtrace` 发行包已从本仓库移除；两个 Beacon 包当前均同步 `0.1.0.dev0` 开发版本，尚未发布。既有 PyPI Guance 包不属于 Beacon 发行，不得以同名同版本覆盖既有制品。Beacon 制品发布方式须在发行前明确，不应把继承的上游或旧仓库发布流程当作 Beacon 发行入口。
+目前已实现 `beacon-otel`、`beacon` 命令与 `beacon-profiling`，并完成开发版单元测试、Python 3.10–3.14 独立环境安装与启动冒烟验证；尚未完成完整上游测试矩阵、DataKit 后端入库确认、候选制品验收和远端 CI。旧 `gtrace` 发行包已从本仓库移除；两个 Beacon 包的源码版本均已准备为 `0.1.0rc1` 候选版，但尚未打标签或发布。既有 PyPI Guance 包不属于 Beacon 发行，不得以同名同版本覆盖既有制品。不应把继承的上游或旧仓库发布流程当作 Beacon 发行入口。
