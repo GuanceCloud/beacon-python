@@ -18,11 +18,13 @@ Beacon Python 是 GuanceCloud 基于完整 OpenTelemetry Python Contrib 源码�
 
 ## Beacon Contributors
 
-以下仅列已核对身份的 Beacon Python 下游贡献者，不将继承的上游作者自动计入名单；完整代码来源仍以 Git 历史为准。
-
-| GitHub 账号 | Git 署名 | 可追溯的下游贡献 |
-| --- | --- | --- |
-| [@lrwh](https://github.com/lrwh) | `liurui` | [旧 `gtrace` 发行包与 Profiling 实现](https://github.com/GuanceCloud/beacon-python/commit/55658637367c766ba3d2444d844e85881495370e)、[Beacon Python 工程初始化](https://github.com/GuanceCloud/beacon-python/commit/9fa18964fa1fc6470cac6b45d86d649ddadddd55) |
+<p align="center">
+  <a href="https://github.com/lrwh">
+    <img src="https://avatars.githubusercontent.com/u/17264378?v=4" width="96" height="96" alt="Reid Liu">
+    <br>
+    Reid Liu
+  </a>
+</p>
 
 ## 产品与上游
 
