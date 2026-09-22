@@ -11,7 +11,7 @@ Beacon Python 是 GuanceCloud 基于完整 OpenTelemetry Python Contrib 源码�
 - [同步 OpenTelemetry](beacon/UPSTREAM.md)
 - [发行准备](beacon/RELEASING.md)
 - [上游自动插桩发行包](opentelemetry-distro/)
-- [Profiling 扩展](sdk-extension/guance-sdk-extension-profiling/)
+- [Profiling 扩展](sdk-extension/beacon-profiling/)
 - [贡献指南](CONTRIBUTING.md)
 
 开发主线为 `main`。从仓库根目录执行 `uvx --from uv==0.12.1 uv lock --check` 可检查开发依赖锁定状态；自有包测试及完整上游矩阵的入口见[开发说明](beacon/README.md)。依赖解析、构建或本地测试通过均不等于正式发行验收。
@@ -32,4 +32,4 @@ Beacon Python 是 GuanceCloud 基于完整 OpenTelemetry Python Contrib 源码�
 - [OpenTelemetry Python Contrib](https://github.com/open-telemetry/opentelemetry-python-contrib)
 - [导入时的 Guance 自有实现](https://github.com/GuanceCloud/opentelemetry-python-contrib/tree/40b90737969d7dfd48a732a93a3a3734f55bff27)
 
-保留上游源码布局、包名和[许可证](LICENSE)。Beacon 产品包身份与版本需在首次发行前确定，不以现有 Guance 包版本覆盖已发布制品。
+保留上游源码布局、包名和[许可证](LICENSE)。Beacon Profiling 已采用独立开发包名与版本，但尚未正式发行；未来主安装包 `beacon-otel` 也尚未实现，不以现有 Guance 包版本覆盖已发布制品。

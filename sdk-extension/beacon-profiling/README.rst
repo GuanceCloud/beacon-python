@@ -1,9 +1,9 @@
-Guance SDK Extension for Python Profiling
-=========================================
+Beacon Profiling for Python
+===========================
 
-This package predates Beacon Python. Its published Guance versions are
-not Beacon releases. The Beacon Python downstream source is currently in
-development; see ``../../beacon/README.md`` in this repository for status.
+This package is in development and has not been published as a Beacon
+release. The previously published Guance profiling package is a separate
+legacy release; see ``../../beacon/README.md`` in this repository for status.
 
 This package provides a Python profiling runtime for OpenTelemetry
 auto-instrumentation. The current implementation exports profiles via
@@ -15,13 +15,6 @@ OTLP and supports multiple collector types:
 * threading and asyncio condition wait time
 * heap snapshots via ``tracemalloc``
 * child-process restart after ``fork()``
-
-Installation
-------------
-
-::
-
-    pip install guance-sdk-extension-profiling
 
 Usage
 -----

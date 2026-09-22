@@ -11,7 +11,7 @@ dependencies = [
   "opentelemetry-test-utils",
   "opentelemetry-exporter-prometheus-remote-write",
   "opentelemetry-exporter-richconsole",
-  "guance-sdk-extension-profiling",
+  "beacon-profiling",
   "opentelemetry-instrumentation-aio-pika[instruments]",
   "opentelemetry-instrumentation-aiohttp-client[instruments]",
   "opentelemetry-instrumentation-aiohttp-server[instruments]",
@@ -85,7 +85,7 @@ opentelemetry-exporter-otlp = { git = "https://github.com/open-telemetry/opentel
 opentelemetry-instrumentation = { workspace = true }
 opentelemetry-exporter-prometheus-remote-write = { workspace = true }
 opentelemetry-exporter-richconsole = { workspace = true }
-guance-sdk-extension-profiling = { workspace = true }
+beacon-profiling = { workspace = true }
 opentelemetry-instrumentation-aio-pika = { workspace = true }
 opentelemetry-instrumentation-aiohttp-client = { workspace = true }
 opentelemetry-instrumentation-aiohttp-server = { workspace = true }
