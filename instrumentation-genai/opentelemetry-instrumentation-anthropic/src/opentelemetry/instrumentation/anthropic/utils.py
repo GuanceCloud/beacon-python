@@ -1,16 +1,5 @@
 # Copyright The OpenTelemetry Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
 
 """Shared helper utilities for Anthropic instrumentation."""
 
@@ -18,8 +7,9 @@ from __future__ import annotations
 
 import base64
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from anthropic.types import (
     InputJSONDelta,
@@ -38,12 +28,12 @@ from opentelemetry.util.genai.types import (
     MessagePart,
     Reasoning,
     Text,
-    ToolCall,
+    ToolCallRequest,
     ToolCallResponse,
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping
+    from collections.abc import Iterable
 
     from anthropic.types import (
         ContentBlock,
@@ -114,7 +104,7 @@ def _convert_dict_block_to_part(
 
     if block_type == "tool_use":
         inp = block.get("input")
-        return ToolCall(
+        return ToolCallRequest(
             arguments=inp if isinstance(inp, dict) else None,
             name=str(block.get("name", "")),
             id=str(block.get("id", "")),
@@ -144,7 +134,9 @@ def _convert_content_block_to_part(
         return Text(content=block.text)
 
     if isinstance(block, (ToolUseBlock, ServerToolUseBlock)):
-        return ToolCall(arguments=block.input, name=block.name, id=block.id)
+        return ToolCallRequest(
+            arguments=block.input, name=block.name, id=block.id
+        )
 
     if isinstance(block, (ThinkingBlock, RedactedThinkingBlock)):
         content = (
@@ -158,12 +150,9 @@ def _convert_content_block_to_part(
             id=block.tool_use_id,
         )
 
-    # ContentBlockParam variants are TypedDicts (dicts at runtime);
-    # newer SDK versions may add Pydantic block types not handled above.
-    if isinstance(block, dict):
-        return _convert_dict_block_to_part(block)
-
-    return None
+    if not hasattr(block, "get"):
+        return None
+    return _convert_dict_block_to_part(cast(Mapping[str, Any], block))
 
 
 def convert_content_to_parts(
@@ -229,7 +218,7 @@ def stream_block_state_to_part(state: StreamBlockState) -> MessagePart | None:
                 arguments = json.loads(state.input_json)
             except ValueError:
                 arguments = state.input_json
-        return ToolCall(
+        return ToolCallRequest(
             arguments=arguments,
             name=state.tool_name,
             id=state.tool_id,

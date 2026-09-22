@@ -150,6 +150,13 @@ class OTLPProfileExporter(
     ) -> ExportProfilesServiceRequest:
         return data
 
+    def _count_data(self, data: ExportProfilesServiceRequest) -> int:
+        return sum(
+            len(scope_profiles.profiles)
+            for resource_profiles in data.resource_profiles
+            for scope_profiles in resource_profiles.scope_profiles
+        )
+
     def export(
         self, request: ExportProfilesServiceRequest
     ) -> ProfileExportResult:

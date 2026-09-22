@@ -19,6 +19,7 @@ import logging
 import random
 import threading
 import zlib
+from http import HTTPStatus
 from io import BytesIO
 from os import environ
 from time import time
@@ -31,7 +32,6 @@ from opentelemetry.exporter.otlp.proto.http import (
     _OTLP_HTTP_HEADERS,
     Compression,
 )
-from opentelemetry.exporter.otlp.proto.http._common import _is_retryable
 from opentelemetry.proto.collector.profiles.v1development.profiles_service_pb2 import (
     ExportProfilesServiceRequest,
 )
@@ -64,6 +64,14 @@ DEFAULT_ENDPOINT = "http://localhost:4318/"
 DEFAULT_PROFILES_EXPORT_PATH = "v1development/profiles"
 DEFAULT_TIMEOUT = 10
 _MAX_RETRYS = 6
+_RETRYABLE_STATUS_CODES = frozenset(
+    {
+        HTTPStatus.TOO_MANY_REQUESTS,
+        HTTPStatus.BAD_GATEWAY,
+        HTTPStatus.SERVICE_UNAVAILABLE,
+        HTTPStatus.GATEWAY_TIMEOUT,
+    }
+)
 
 
 class OTLPHTTPProfileExporter:
@@ -147,7 +155,7 @@ class OTLPHTTPProfileExporter:
                 status_code = None
             else:
                 reason = response.reason
-                retryable = _is_retryable(response)
+                retryable = response.status_code in _RETRYABLE_STATUS_CODES
                 status_code = response.status_code
 
             if (
