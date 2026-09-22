@@ -50,7 +50,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: pypi-profiling
       url: https://pypi.org/project/beacon-profiling/
     permissions:
       id-token: write

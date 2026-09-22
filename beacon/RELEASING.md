@@ -14,11 +14,11 @@
 ## 首次发布操作
 
 1. 在完成接收端及环境验收后，将 `version.properties` 从开发版改为 `0.1.0rc1`（或经确认的正式版本），运行 `python beacon/scripts/check-version.py --sync`，更新锁文件并提交。CI 的 [ci.yml](../.github/workflows/ci.yml) 在 Python 3.10–3.14 的干净环境安装两个构建制品、检查元数据并测试自有包；发布前还须确认该提交的 CI 全部通过。
-2. 仓库管理员在 GitHub 创建名为 `pypi` 的 Environment，限制为 `beacon-v*` 标签并设置人工审核；在 PyPI 分别为 `beacon-profiling`、`beacon-otel` 配置待生效的 Trusted Publisher，均指向 `GuanceCloud/beacon-python`、`beacon-release.yml` 和 `pypi`。确认这些保护生效后，才将仓库变量 `BEACON_PYPI_RELEASE_ENABLED` 设为 `true`。没有这些设置时[发布工作流](../.github/workflows/beacon-release.yml)只会跳过，不会尝试上传。不要把 PyPI 令牌写入仓库。
-3. 仅在实际验收通过后给已验证提交打 `beacon-v0.1.0rc1`（或正式版）标签并推送。手动在该标签上运行 `Publish Beacon Python`；构建和测试通过后先发布 Profiling，再发布主包。发布任务分别在受保护的 `pypi` 环境等待批准。PyPI 不允许覆盖同一版本，失败后修复应递增版本，不能重传已发布文件。
+2. 仓库管理员在 GitHub 创建 `pypi-profiling` 和 `pypi` 两个 Environment，均限制为 `beacon-v*` 标签并设置人工审核；在 PyPI 分别为 `beacon-profiling`、`beacon-otel` 配置待生效的 Trusted Publisher，均指向 `GuanceCloud/beacon-python` 和 `beacon-release.yml`，但环境分别填写 `pypi-profiling`、`pypi`。PyPI 会拒绝同一仓库、工作流和环境组合用于两个不同名称的待创建项目；首版采用不同环境，正式项目创建后再按需评估合并。确认这些保护生效后，才将仓库变量 `BEACON_PYPI_RELEASE_ENABLED` 设为 `true`。没有这些设置时[发布工作流](../.github/workflows/beacon-release.yml)只会跳过，不会尝试上传。不要把 PyPI 令牌写入仓库。
+3. 仅在实际验收通过后给已验证提交打 `beacon-v0.1.0rc1`（或正式版）标签并推送。手动在该标签上运行 `Publish Beacon Python`；构建和测试通过后先发布 Profiling，再发布主包。发布任务分别在受保护的 `pypi-profiling`、`pypi` 环境等待批准。PyPI 不允许覆盖同一版本，失败后修复应递增版本，不能重传已发布文件。
 4. 在 PyPI 核对两个包的版本和制品，再用全新虚拟环境从公开索引安装 `beacon-otel[profiling,requests]`，验证 `beacon --version`、应用自动插桩和目标 DataKit 接收。随后创建 GitHub Release，写明对应的 Contrib/Core 基线、已验证能力和环境、限制及回退方法；最后更新产品仓库的 Python 入口。
 
-GitHub 的 `pypi` Environment 已创建，限定 `beacon-v*` 标签并要求 `lrwh` 人工审核；PyPI 两个项目的 Trusted Publisher 尚未配置，`BEACON_PYPI_RELEASE_ENABLED` 也未启用。本仓库代码推送或开发制品构建均不会自动发布。
+GitHub 的 `pypi` 和 `pypi-profiling` Environment 均已创建，限定 `beacon-v*` 标签并要求 `lrwh` 人工审核；PyPI 的 `beacon-otel` Pending Publisher 已配置，`beacon-profiling` 尚待按新环境名配置。`BEACON_PYPI_RELEASE_ENABLED` 未启用，本仓库代码推送或开发制品构建均不会自动发布。
 
 首次发行前需要在本仓库确定并验证：
 
