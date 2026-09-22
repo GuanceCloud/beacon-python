@@ -12,6 +12,7 @@
 | 自有 Profiling 扩展 | [guance-sdk-extension-profiling](../sdk-extension/guance-sdk-extension-profiling/) |
 | 上游自动插桩及测试 | [instrumentation](../instrumentation/) |
 | 构建与贡献约定 | [CONTRIBUTING.md](../CONTRIBUTING.md) |
+| Beacon 自有贡献者 | [CONTRIBUTORS.md](CONTRIBUTORS.md) |
 | 发行准备项 | [RELEASING.md](RELEASING.md) |
 
 从仓库根目录执行以下开发验证；运行完整上游矩阵仍需按[贡献指南](../CONTRIBUTING.md)准备环境：
