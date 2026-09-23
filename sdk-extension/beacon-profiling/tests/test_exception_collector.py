@@ -1,4 +1,3 @@
-
 import pytest
 
 from opentelemetry.sdk.extension.profiling.collector.exception import (
@@ -39,7 +38,9 @@ def test_exception_collector_captures_handled_exception():
 
     assert len(samples) == 1
     sample = samples[0]
-    attributes = {attribute.key: attribute.value for attribute in sample.attributes}
+    attributes = {
+        attribute.key: attribute.value for attribute in sample.attributes
+    }
 
     assert sample.sample_type == "exceptions"
     assert sample.period_type == "exceptions"

@@ -132,7 +132,9 @@ class ProfilesRequestBuilder:
             )
             bucket.values.append(sample.value)
             bucket.timestamps_unix_nano.append(sample.timestamp_unix_nano)
-            profile_bucket.timestamps_unix_nano.append(sample.timestamp_unix_nano)
+            profile_bucket.timestamps_unix_nano.append(
+                sample.timestamp_unix_nano
+            )
 
         profiles = [
             self._build_profile(bucket, dictionary)
@@ -164,9 +166,11 @@ class ProfilesRequestBuilder:
         duration = max(end_time - start_time, bucket.period)
 
         profile_samples = []
-        for (stack_index, attribute_indices, link_index), sample_bucket in (
-            bucket.sample_buckets.items()
-        ):
+        for (
+            stack_index,
+            attribute_indices,
+            link_index,
+        ), sample_bucket in bucket.sample_buckets.items():
             profile_samples.append(
                 Sample(
                     stack_index=stack_index,
@@ -230,9 +234,7 @@ class _DictionaryBuilder:
             self._strings.append(value)
         return self._string_indices[value]
 
-    def intern_attribute(
-        self, key: str, value: object, unit: str = ""
-    ) -> int:
+    def intern_attribute(self, key: str, value: object, unit: str = "") -> int:
         identity = (key, value, unit)
         if identity not in self._attribute_indices:
             self._attribute_indices[identity] = len(self._attributes)

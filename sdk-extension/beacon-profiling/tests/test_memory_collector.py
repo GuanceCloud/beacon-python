@@ -26,7 +26,9 @@ def test_memory_collector_captures_heap_samples():
 
     assert allocations is not None
     bytes_samples = [
-        sample for sample in samples if sample.sample_type == "memory.heap.bytes"
+        sample
+        for sample in samples
+        if sample.sample_type == "memory.heap.bytes"
     ]
     object_samples = [
         sample
@@ -46,7 +48,9 @@ def test_memory_collector_captures_heap_samples():
     assert target_bytes_samples
 
     sample = target_bytes_samples[0]
-    attributes = {attribute.key: attribute.value for attribute in sample.attributes}
+    attributes = {
+        attribute.key: attribute.value for attribute in sample.attributes
+    }
 
     assert sample.thread_id == 0
     assert sample.thread_name == "process"

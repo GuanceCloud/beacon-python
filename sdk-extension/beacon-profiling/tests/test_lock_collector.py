@@ -56,13 +56,13 @@ def test_threading_semaphore_collectors_patch_and_restore_classes():
     bounded_collector.start()
     try:
         assert threading.Semaphore is not original_semaphore_class
-        assert threading.BoundedSemaphore is not original_bounded_semaphore_class
+        assert (
+            threading.BoundedSemaphore is not original_bounded_semaphore_class
+        )
         semaphore = threading.Semaphore(1)
         bounded_semaphore = threading.BoundedSemaphore(1)
         assert isinstance(semaphore, original_semaphore_class)
-        assert isinstance(
-            bounded_semaphore, original_bounded_semaphore_class
-        )
+        assert isinstance(bounded_semaphore, original_bounded_semaphore_class)
     finally:
         bounded_collector.stop()
         semaphore_collector.stop()

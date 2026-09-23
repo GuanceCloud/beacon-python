@@ -21,9 +21,7 @@ class PPROFProfileExporter:
         self._pid = os.getpid()
 
     def export(self, payload: bytes) -> ProfileExportResult:
-        filename = (
-            f"{self._directory}.{self._pid}.{next(self._counter)}.pprof"
-        )
+        filename = f"{self._directory}.{self._pid}.{next(self._counter)}.pprof"
         with open(filename, "wb") as handle:
             handle.write(payload)
         return ProfileExportResult.SUCCESS

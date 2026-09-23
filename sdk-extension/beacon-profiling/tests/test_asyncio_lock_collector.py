@@ -46,9 +46,7 @@ def test_asyncio_collectors_patch_and_restore_classes():
         condition = asyncio.Condition()
         assert isinstance(lock, original_lock_class)
         assert isinstance(semaphore, original_semaphore_class)
-        assert isinstance(
-            bounded_semaphore, original_bounded_semaphore_class
-        )
+        assert isinstance(bounded_semaphore, original_bounded_semaphore_class)
         assert isinstance(condition, original_condition_class)
     finally:
         condition_collector.stop()
