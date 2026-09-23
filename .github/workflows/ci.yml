@@ -29,6 +29,20 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Check version and baseline
         run: python beacon/scripts/check-version.py
+      - name: Lint Beacon-owned code
+        run: |
+          uvx --from ruff==0.14.1 ruff check \
+            beacon-otel \
+            sdk-extension/beacon-profiling \
+            beacon/examples/fastapi-demo \
+            beacon/scripts \
+            beacon/tests
+          uvx --from ruff==0.14.1 ruff format --check \
+            beacon-otel \
+            sdk-extension/beacon-profiling \
+            beacon/examples/fastapi-demo \
+            beacon/scripts \
+            beacon/tests
       - name: Build both Beacon packages
         run: |
           uv build --package beacon-otel --out-dir dist

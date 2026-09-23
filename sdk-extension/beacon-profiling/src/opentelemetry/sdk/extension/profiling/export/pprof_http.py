@@ -119,16 +119,14 @@ class PPROFHTTPExporter:
             "attachments": ["auto.pprof"],
             "tags_profiler": self._format_tags(service, resource),
             "start": _format_timestamp(
-                start_time_unix_nano or datetime.datetime.now(
-                    tz=datetime.timezone.utc
-                ).timestamp()
+                start_time_unix_nano
+                or datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
                 * 1_000_000_000
             ),
             "end": _format_timestamp(
-                end_time_unix_nano or start_time_unix_nano
-                or datetime.datetime.now(
-                    tz=datetime.timezone.utc
-                ).timestamp()
+                end_time_unix_nano
+                or start_time_unix_nano
+                or datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
                 * 1_000_000_000
             ),
         }
@@ -142,9 +140,7 @@ class PPROFHTTPExporter:
         ]
         return _encode_multipart_formdata(event=event, files=files)
 
-    def _format_tags(
-        self, service: str, resource: Resource | None
-    ) -> str:
+    def _format_tags(self, service: str, resource: Resource | None) -> str:
         tags = {
             "service": service,
             "runtime-id": self._runtime_id,
@@ -170,15 +166,24 @@ class PPROFHTTPExporter:
         )
 
     def _resolve_env(self, resource: Resource | None) -> str | None:
-        return _resource_attribute(
-            resource, "deployment.environment.name", "deployment.environment"
-        ) or self._env
+        return (
+            _resource_attribute(
+                resource,
+                "deployment.environment.name",
+                "deployment.environment",
+            )
+            or self._env
+        )
 
     def _resolve_version(self, resource: Resource | None) -> str | None:
-        return _resource_attribute(resource, "service.version") or self._version
+        return (
+            _resource_attribute(resource, "service.version") or self._version
+        )
 
     def _write_payload(self, payload: bytes) -> str:
-        filename = f"{self._pprof_path}.{self._pid}.{next(self._counter)}.pprof"
+        filename = (
+            f"{self._pprof_path}.{self._pid}.{next(self._counter)}.pprof"
+        )
         with open(filename, "wb") as handle:
             handle.write(payload)
         return filename
@@ -220,9 +225,7 @@ def _parse_headers(value: str) -> Dict[str, str]:
     return headers
 
 
-def _resource_attribute(
-    resource: Resource | None, *keys: str
-) -> str | None:
+def _resource_attribute(resource: Resource | None, *keys: str) -> str | None:
     if resource is None:
         return None
     for key in keys:
@@ -237,9 +240,7 @@ def _format_timestamp(timestamp_unix_nano: float | int) -> str:
         float(timestamp_unix_nano) / 1e9,
         tz=datetime.timezone.utc,
     )
-    return (
-        timestamp.replace(microsecond=0).isoformat()[0:-6] + "Z"
-    )
+    return timestamp.replace(microsecond=0).isoformat()[0:-6] + "Z"
 
 
 def _encode_multipart_formdata(

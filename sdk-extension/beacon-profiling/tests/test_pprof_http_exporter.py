@@ -8,9 +8,7 @@ from opentelemetry.sdk.extension.profiling.export.pprof_http import (
 from opentelemetry.sdk.resources import Resource
 
 
-def test_pprof_http_exporter_posts_multipart_payload(
-    monkeypatch, tmp_path
-):
+def test_pprof_http_exporter_posts_multipart_payload(monkeypatch, tmp_path):
     session = Mock()
     session.post.return_value = Mock(status_code=202, text="ok")
     monkeypatch.setenv(

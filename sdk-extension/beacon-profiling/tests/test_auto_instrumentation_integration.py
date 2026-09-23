@@ -50,11 +50,7 @@ def test_initialize_loads_profiling_pre_instrument(monkeypatch):
 
     def fake_entry_points(*, group):  # noqa: ANN202
         if group == "opentelemetry_pre_instrument":
-            return [
-                _FakeEntryPoint(
-                    "profiling", group, bootstrap.auto_start
-                )
-            ]
+            return [_FakeEntryPoint("profiling", group, bootstrap.auto_start)]
         return []
 
     monkeypatch.setenv("OTEL_PROFILING_ENABLED", "true")
@@ -97,7 +93,9 @@ def test_run_registers_profiling_environment_variable_arguments(monkeypatch):
         captured["executable"] = executable
         captured["args"] = args
 
-    monkeypatch.setattr(auto_instrumentation, "entry_points", fake_entry_points)
+    monkeypatch.setattr(
+        auto_instrumentation, "entry_points", fake_entry_points
+    )
     monkeypatch.setattr(auto_instrumentation, "which", lambda command: command)
     monkeypatch.setattr(auto_instrumentation, "execl", fake_execl)
     monkeypatch.delenv("OTEL_PROFILING_ENABLED", raising=False)
@@ -121,23 +119,15 @@ def test_run_registers_profiling_environment_variable_arguments(monkeypatch):
 
     assert captured["executable"] == "python"
     assert captured["args"] == ("python", "-c", "pass")
+    assert profiling_environment_variables.OTEL_PROFILING_ENABLED in environ
     assert (
-        profiling_environment_variables.OTEL_PROFILING_ENABLED
-        in environ
+        profiling_environment_variables.OTEL_PROFILING_LOCK_ENABLED in environ
     )
     assert (
-        profiling_environment_variables.OTEL_PROFILING_LOCK_ENABLED
-        in environ
-    )
-    assert (
-        environ[
-            profiling_environment_variables.OTEL_PROFILING_ENABLED
-        ]
+        environ[profiling_environment_variables.OTEL_PROFILING_ENABLED]
         == "true"
     )
     assert (
-        environ[
-            profiling_environment_variables.OTEL_PROFILING_LOCK_ENABLED
-        ]
+        environ[profiling_environment_variables.OTEL_PROFILING_LOCK_ENABLED]
         == "true"
     )
