@@ -308,15 +308,11 @@ class _PrimitiveCollector:
                 if span_metadata is not None
                 else span_context.span_id
             ),
-            trace_type=(
-                span_metadata.trace_type if span_metadata else None
-            ),
+            trace_type=(span_metadata.trace_type if span_metadata else None),
             trace_endpoint=(
                 span_metadata.trace_endpoint if span_metadata else None
             ),
-            class_name=(
-                span_metadata.class_name if span_metadata else None
-            ),
+            class_name=(span_metadata.class_name if span_metadata else None),
             value=value,
             sample_type=sample_type,
             sample_unit="nanoseconds",
@@ -426,15 +422,14 @@ def _build_profiled_sync_class(
             self._otel_profiled_state = _ProfiledPrimitiveState(
                 collector,
                 lock_kind=lock_kind,
-                is_internal=_is_internal_lock_allocation(
-                    internal_module_file
-                ),
+                is_internal=_is_internal_lock_allocation(internal_module_file),
             )
             if _should_bind_instance_lock_methods(original_class):
                 original_acquire = self.acquire
                 original_release = self.release
                 self.acquire = (  # type: ignore[method-assign]
-                    lambda *inner_args, **inner_kwargs: _acquire_sync_primitive(
+                    lambda *inner_args,
+                    **inner_kwargs: _acquire_sync_primitive(
                         self._otel_profiled_state,
                         original_acquire,
                         *inner_args,
@@ -442,7 +437,8 @@ def _build_profiled_sync_class(
                     )
                 )
                 self.release = (  # type: ignore[method-assign]
-                    lambda *inner_args, **inner_kwargs: _release_sync_primitive(
+                    lambda *inner_args,
+                    **inner_kwargs: _release_sync_primitive(
                         self._otel_profiled_state,
                         original_release,
                         *inner_args,
@@ -521,9 +517,7 @@ def _build_profiled_async_class(
             self._otel_profiled_state = _ProfiledPrimitiveState(
                 collector,
                 lock_kind=lock_kind,
-                is_internal=_is_internal_lock_allocation(
-                    internal_module_file
-                ),
+                is_internal=_is_internal_lock_allocation(internal_module_file),
             )
             if _should_bind_instance_lock_methods(original_class):
                 original_acquire = self.acquire
@@ -628,7 +622,9 @@ def _acquire_sync_primitive(
             state,
             start_ns=start_ns,
             end_ns=end_ns,
-            frames=_capture_current_frames(max_frames=state.collector.max_frames),
+            frames=_capture_current_frames(
+                max_frames=state.collector.max_frames
+            ),
         )
     return result
 
@@ -651,7 +647,9 @@ async def _acquire_async_primitive(
             state,
             start_ns=start_ns,
             end_ns=end_ns,
-            frames=_capture_current_frames(max_frames=state.collector.max_frames),
+            frames=_capture_current_frames(
+                max_frames=state.collector.max_frames
+            ),
         )
     return result
 
@@ -690,7 +688,9 @@ def _wait_sync_primitive(
             state,
             start_ns=start_ns,
             end_ns=monotonic_ns(),
-            frames=_capture_current_frames(max_frames=state.collector.max_frames),
+            frames=_capture_current_frames(
+                max_frames=state.collector.max_frames
+            ),
         )
     return result
 
@@ -729,7 +729,9 @@ async def _wait_async_primitive(
             state,
             start_ns=start_ns,
             end_ns=monotonic_ns(),
-            frames=_capture_current_frames(max_frames=state.collector.max_frames),
+            frames=_capture_current_frames(
+                max_frames=state.collector.max_frames
+            ),
         )
     return result
 

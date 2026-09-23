@@ -219,9 +219,7 @@ class ExceptionCollector:
         finally:
             self._set_collecting(False)
 
-    def _build_sample(
-        self, exception: BaseException
-    ) -> CapturedSample | None:
+    def _build_sample(self, exception: BaseException) -> CapturedSample | None:
         if isinstance(exception, _IGNORED_EXCEPTIONS):
             return None
 
@@ -270,15 +268,11 @@ class ExceptionCollector:
                 if span_metadata is not None
                 else span_context.span_id
             ),
-            trace_type=(
-                span_metadata.trace_type if span_metadata else None
-            ),
+            trace_type=(span_metadata.trace_type if span_metadata else None),
             trace_endpoint=(
                 span_metadata.trace_endpoint if span_metadata else None
             ),
-            class_name=(
-                span_metadata.class_name if span_metadata else None
-            ),
+            class_name=(span_metadata.class_name if span_metadata else None),
             sample_type="exceptions",
             sample_unit="count",
             period_type="exceptions",
