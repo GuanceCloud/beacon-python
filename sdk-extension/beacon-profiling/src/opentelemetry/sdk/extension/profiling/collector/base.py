@@ -47,6 +47,7 @@ class CapturedSample:
     task_id: int | None = None
     task_name: str | None = None
     value: int = 1
+    cpu_time_ns: int = 0
     sample_type: str = "samples"
     sample_unit: str = "count"
     period_type: str = "wall"

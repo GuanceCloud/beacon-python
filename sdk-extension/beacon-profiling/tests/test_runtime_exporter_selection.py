@@ -68,3 +68,39 @@ def test_runtime_uses_standard_pprof_builder_for_file_exporter(tmp_path):
         assert not isinstance(profiler._builder, CompatiblePprofProfileBuilder)
     finally:
         profiler._exporter.shutdown()
+
+
+def test_runtime_defaults_to_sixty_second_intervals(monkeypatch):
+    monkeypatch.delenv("OTEL_PROFILING_EXPORT_INTERVAL", raising=False)
+    monkeypatch.delenv("OTEL_PROFILING_MEMORY_INTERVAL", raising=False)
+
+    profiler = Profiler(exporter=object())
+
+    assert profiler._export_interval == 60.0
+    assert profiler._memory_interval == 60.0
+
+
+def test_runtime_interval_environment_variables_override_defaults(
+    monkeypatch,
+):
+    monkeypatch.setenv("OTEL_PROFILING_EXPORT_INTERVAL", "17.5")
+    monkeypatch.setenv("OTEL_PROFILING_MEMORY_INTERVAL", "23.5")
+
+    profiler = Profiler(exporter=object())
+
+    assert profiler._export_interval == 17.5
+    assert profiler._memory_interval == 23.5
+
+
+def test_runtime_interval_arguments_override_environment(monkeypatch):
+    monkeypatch.setenv("OTEL_PROFILING_EXPORT_INTERVAL", "17.5")
+    monkeypatch.setenv("OTEL_PROFILING_MEMORY_INTERVAL", "23.5")
+
+    profiler = Profiler(
+        exporter=object(),
+        export_interval=31.5,
+        memory_interval=37.5,
+    )
+
+    assert profiler._export_interval == 31.5
+    assert profiler._memory_interval == 37.5

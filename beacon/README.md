@@ -14,6 +14,7 @@
 | 上游自动插桩及测试 | [instrumentation](../instrumentation/) |
 | 构建与贡献约定 | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Beacon 版本与上游基线检查 | [check-version.py](scripts/check-version.py) |
+| FastAPI Demo | [examples/fastapi-demo](examples/fastapi-demo/) |
 | 发行准备项 | [RELEASING.md](RELEASING.md) |
 
 从仓库根目录执行以下开发验证；运行完整上游矩阵仍需按[贡献指南](../CONTRIBUTING.md)准备环境：
@@ -26,4 +27,4 @@ uvx --from uv==0.12.1 uv run --frozen --package beacon-otel --with pytest pytest
 uvx --from uv==0.12.1 uv run --frozen --package beacon-profiling --with pytest pytest -q sdk-extension/beacon-profiling/tests
 ```
 
-目前已实现 `beacon-otel`、`beacon` 命令与 `beacon-profiling`，并完成开发版单元测试、Python 3.10–3.14 独立环境安装与启动冒烟验证；尚未完成完整上游测试矩阵、DataKit 后端入库确认、候选制品验收和远端 CI。旧 `gtrace` 发行包已从本仓库移除；两个 Beacon 包的源码版本均已准备为 `0.1.0rc1` 候选版，但尚未打标签或发布。既有 PyPI Guance 包不属于 Beacon 发行，不得以同名同版本覆盖既有制品。不应把继承的上游或旧仓库发布流程当作 Beacon 发行入口。
+目前已实现 `beacon-otel`、`beacon` 命令与 `beacon-profiling`；`0.1.0rc1` 已发布到 PyPI，并完成 FastAPI Demo、DataKit Trace 与 pprof 入库验收。当前源码准备发布 `0.1.0rc2`，修正 Profile CPU 时间和内存快照调度，并将 Profile 默认导出周期设为可覆盖的 60 秒。旧 `gtrace` 发行包已从本仓库移除；既有 PyPI Guance 包不属于 Beacon 发行，不得以同名同版本覆盖既有制品。不应把继承的上游或旧仓库发布流程当作 Beacon 发行入口。

@@ -81,6 +81,8 @@ from opentelemetry.trace import get_tracer_provider
 
 _logger = logging.getLogger(__name__)
 
+_DEFAULT_EXPORT_INTERVAL_SECONDS = 60.0
+
 
 class Profiler:
     _active_instance: "Profiler | None" = None
@@ -108,37 +110,35 @@ class Profiler:
         self._sample_interval = sample_interval or float(
             environ.get(OTEL_PROFILING_SAMPLE_INTERVAL, "0.01")
         )
-        self._export_interval = export_interval or float(
-            environ.get(OTEL_PROFILING_EXPORT_INTERVAL, "60.0")
+        self._export_interval = (
+            export_interval
+            if export_interval is not None
+            else float(
+                environ.get(
+                    OTEL_PROFILING_EXPORT_INTERVAL,
+                    str(_DEFAULT_EXPORT_INTERVAL_SECONDS),
+                )
+            )
         )
         self._max_frames = max_frames or int(
             environ.get(OTEL_PROFILING_MAX_FRAMES, "64")
         )
         self._include_trace_context = (
             _parse_bool(
-                environ.get(
-                    OTEL_PROFILING_INCLUDE_TRACE_CONTEXT, "true"
-                )
+                environ.get(OTEL_PROFILING_INCLUDE_TRACE_CONTEXT, "true")
             )
             if include_trace_context is None
             else include_trace_context
         )
         self._exception_enabled = (
-            _parse_bool(
-                environ.get(
-                    OTEL_PROFILING_EXCEPTION_ENABLED, "false"
-                )
-            )
+            _parse_bool(environ.get(OTEL_PROFILING_EXCEPTION_ENABLED, "false"))
             if exception_enabled is None
             else exception_enabled
         )
-        self._exception_sampling_interval = (
-            exception_sampling_interval
-            or int(
-                environ.get(
-                    OTEL_PROFILING_EXCEPTION_SAMPLING_INTERVAL,
-                    "100",
-                )
+        self._exception_sampling_interval = exception_sampling_interval or int(
+            environ.get(
+                OTEL_PROFILING_EXCEPTION_SAMPLING_INTERVAL,
+                "100",
             )
         )
         self._exception_collect_message = (
@@ -152,16 +152,12 @@ class Profiler:
             else exception_collect_message
         )
         self._lock_enabled = (
-            _parse_bool(
-                environ.get(OTEL_PROFILING_LOCK_ENABLED, "false")
-            )
+            _parse_bool(environ.get(OTEL_PROFILING_LOCK_ENABLED, "false"))
             if lock_enabled is None
             else lock_enabled
         )
         self._memory_enabled = (
-            _parse_bool(
-                environ.get(OTEL_PROFILING_MEMORY_ENABLED, "false")
-            )
+            _parse_bool(environ.get(OTEL_PROFILING_MEMORY_ENABLED, "false"))
             if memory_enabled is None
             else memory_enabled
         )
@@ -175,13 +171,10 @@ class Profiler:
                 )
             )
         )
-        self._memory_top_stats = (
-            memory_top_stats
-            or int(
-                environ.get(
-                    OTEL_PROFILING_MEMORY_TOP_STATS,
-                    "200",
-                )
+        self._memory_top_stats = memory_top_stats or int(
+            environ.get(
+                OTEL_PROFILING_MEMORY_TOP_STATS,
+                "200",
             )
         )
         self._memory_ignore_profiler = (
@@ -267,22 +260,28 @@ class Profiler:
                     ),
                 ]
             )
+        self._memory_collector: Collector | None = None
         if self._memory_enabled:
-            self._collectors.append(
-                MemoryCollector(
-                    max_frames=self._max_frames,
-                    capture_interval=self._memory_interval,
-                    top_stats=self._memory_top_stats,
-                    ignore_profiler=self._memory_ignore_profiler,
-                )
+            self._memory_collector = MemoryCollector(
+                max_frames=self._max_frames,
+                capture_interval=self._memory_interval,
+                top_stats=self._memory_top_stats,
+                ignore_profiler=self._memory_ignore_profiler,
             )
         self._active_collectors: list[Collector] = []
+        self._active_memory_collector: Collector | None = None
         self._exporter = exporter or self._create_exporter_from_env()
         self._builder = self._create_builder()
         self._scheduler = ProfileScheduler(
-            capture=self.capture_once,
+            capture=self._capture_regular_once,
             flush=self.flush,
             sample_interval=self._sample_interval,
+            export_interval=self._export_interval,
+        )
+        self._memory_scheduler = ProfileScheduler(
+            capture=self._capture_memory_once,
+            flush=_noop,
+            sample_interval=self._memory_interval,
             export_interval=self._export_interval,
         )
         self._started = False
@@ -302,6 +301,9 @@ class Profiler:
             self._context_bridge.start()
             self._active_collectors = self._start_collectors()
             self._scheduler.start()
+            self._active_memory_collector = self._start_memory_collector()
+            if self._active_memory_collector is not None:
+                self._memory_scheduler.start()
             self._started = True
             self.__class__._active_instance = self
         if not self._atexit_registered:
@@ -316,7 +318,9 @@ class Profiler:
                 return
             try:
                 self._scheduler.stop()
+                self._memory_scheduler.stop()
                 self._scheduler.join()
+                self._memory_scheduler.join()
                 if flush:
                     self.flush()
                 self._stop_collectors()
@@ -331,8 +335,22 @@ class Profiler:
                     self._unregister_atexit()
 
     def capture_once(self) -> None:
+        collectors = list(self._active_collectors)
+        if self._active_memory_collector is not None:
+            collectors.append(self._active_memory_collector)
+        self._capture_collectors(collectors)
+
+    def _capture_regular_once(self) -> None:
+        self._capture_collectors(self._active_collectors)
+
+    def _capture_memory_once(self) -> None:
+        if self._active_memory_collector is None:
+            return
+        self._capture_collectors([self._active_memory_collector])
+
+    def _capture_collectors(self, collectors: list[Collector]) -> None:
         captured: list[CapturedSample] = []
-        for collector in self._active_collectors:
+        for collector in collectors:
             try:
                 captured.extend(collector.capture())
             except Exception:
@@ -394,9 +412,7 @@ class Profiler:
     def _create_builder(self):
         if isinstance(self._exporter, CompatiblePPROFExporter):
             return CompatiblePprofProfileBuilder()
-        if isinstance(
-            self._exporter, PPROFProfileExporter
-        ):
+        if isinstance(self._exporter, PPROFProfileExporter):
             return PprofProfileBuilder()
         return ProfilesRequestBuilder()
 
@@ -435,6 +451,20 @@ class Profiler:
             active_collectors.append(collector)
         return active_collectors
 
+    def _start_memory_collector(self) -> Collector | None:
+        collector = self._memory_collector
+        if collector is None:
+            return None
+        try:
+            collector.start()
+        except Exception:
+            _logger.exception(
+                "Failed to start profiling collector %s",
+                collector.__class__.__name__,
+            )
+            return None
+        return collector
+
     def _stop_collectors(self) -> None:
         for collector in reversed(self._active_collectors):
             try:
@@ -444,7 +474,16 @@ class Profiler:
                     "Failed to stop profiling collector %s",
                     collector.__class__.__name__,
                 )
+        if self._active_memory_collector is not None:
+            try:
+                self._active_memory_collector.stop()
+            except Exception:
+                _logger.exception(
+                    "Failed to stop profiling collector %s",
+                    self._active_memory_collector.__class__.__name__,
+                )
         self._active_collectors = []
+        self._active_memory_collector = None
 
     def _register_at_fork(self) -> None:
         register_at_fork = getattr(os, "register_at_fork", None)
@@ -459,12 +498,16 @@ class Profiler:
         self._buffer_lock = Lock()
         self._samples = []
         self._active_collectors = []
+        self._active_memory_collector = None
         self._started = False
         self._atexit_registered = False
         self._reset_after_fork(self._context_bridge)
         for collector in self._collectors:
             self._reset_after_fork(collector)
+        if self._memory_collector is not None:
+            self._reset_after_fork(self._memory_collector)
         self._reset_after_fork(self._scheduler)
+        self._reset_after_fork(self._memory_scheduler)
         self._reset_exporter_after_fork()
         self._builder = self._create_builder()
         if was_started:
@@ -509,3 +552,7 @@ class Profiler:
 
 def _parse_bool(value: str) -> bool:
     return value.strip().lower() in ("1", "true", "yes", "on")
+
+
+def _noop() -> None:
+    return None

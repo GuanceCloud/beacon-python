@@ -47,7 +47,8 @@ The following environment variables are supported:
 * ``OTEL_PROFILING_ENABLED``
 * ``OTEL_PROFILING_EXPORTER`` (``otlp`` or ``pprof``)
 * ``OTEL_PROFILING_SAMPLE_INTERVAL``
-* ``OTEL_PROFILING_EXPORT_INTERVAL``
+* ``OTEL_PROFILING_EXPORT_INTERVAL`` (defaults to 60 seconds and can be
+  overridden by the ``Profiler(export_interval=...)`` argument)
 * ``OTEL_PROFILING_MAX_FRAMES``
 * ``OTEL_PROFILING_INCLUDE_TRACE_CONTEXT``
 * ``OTEL_PROFILING_EXCEPTION_ENABLED``
@@ -55,7 +56,8 @@ The following environment variables are supported:
 * ``OTEL_PROFILING_EXCEPTION_COLLECT_MESSAGE``
 * ``OTEL_PROFILING_LOCK_ENABLED``
 * ``OTEL_PROFILING_MEMORY_ENABLED``
-* ``OTEL_PROFILING_MEMORY_INTERVAL``
+* ``OTEL_PROFILING_MEMORY_INTERVAL`` (defaults to the profile export interval
+  and can be overridden by the ``Profiler(memory_interval=...)`` argument)
 * ``OTEL_PROFILING_MEMORY_TOP_STATS``
 * ``OTEL_PROFILING_MEMORY_IGNORE_PROFILER``
 * ``OTEL_EXPORTER_OTLP_PROFILES_PROTOCOL``

@@ -19,17 +19,13 @@ from opentelemetry.sdk.resources import Resource
 @dataclass
 class _PprofDictionary:
     strings: list[str] = field(default_factory=lambda: [""])
-    string_indices: dict[str, int] = field(
-        default_factory=lambda: {"": 0}
-    )
+    string_indices: dict[str, int] = field(default_factory=lambda: {"": 0})
     functions: list[pprof_pb2.Function] = field(default_factory=list)
     function_indices: dict[tuple[int, int, int], int] = field(
         default_factory=dict
     )
     locations: list[pprof_pb2.Location] = field(default_factory=list)
-    location_indices: dict[tuple[int, int], int] = field(
-        default_factory=dict
-    )
+    location_indices: dict[tuple[int, int], int] = field(default_factory=dict)
 
     def intern_string(self, value: str) -> int:
         if value not in self.string_indices:
@@ -97,9 +93,7 @@ class PprofProfileBuilder:
         profile.period_type.type = dictionary.intern_string("wall")
         profile.period_type.unit = dictionary.intern_string("nanoseconds")
 
-        sample_type_indices: dict[
-            tuple[str, str], int
-        ] = {}
+        sample_type_indices: dict[tuple[str, str], int] = {}
         for sample in samples:
             key = (sample.sample_type, sample.sample_unit)
             if key not in sample_type_indices:
@@ -262,8 +256,6 @@ _COMPATIBLE_PYTHON_SAMPLE_TYPES = (
     ("lock-acquire-wait", "nanoseconds"),
     ("lock-release", "count"),
     ("lock-release-hold", "nanoseconds"),
-    ("alloc-samples", "count"),
-    ("alloc-space", "bytes"),
     ("heap-space", "bytes"),
 )
 
@@ -301,11 +293,14 @@ class CompatiblePprofProfileBuilder(PprofProfileBuilder):
         mapping_id = self._add_mapping(profile, dictionary, samples, resource)
 
         for sample in samples:
+            values = self._compat_values(sample, sample_period_ns)
+            if not any(values):
+                continue
             sample_msg = pprof_pb2.Sample(
                 location_id=self._compat_location_ids(
                     sample.frames, dictionary, mapping_id
                 ),
-                value=self._compat_values(sample, sample_period_ns),
+                value=values,
                 label=self._compat_labels(sample, dictionary),
             )
             profile.sample.append(sample_msg)
@@ -367,8 +362,9 @@ class CompatiblePprofProfileBuilder(PprofProfileBuilder):
         values = [0] * len(_COMPATIBLE_PYTHON_SAMPLE_TYPES)
 
         if sample.sample_type == "samples":
-            values[0] = sample.value
-            values[1] = sample.value * sample_period_ns
+            if sample.cpu_time_ns > 0:
+                values[0] = sample.value
+                values[1] = sample.cpu_time_ns
             values[2] = sample.value * sample_period_ns
             return values
 
@@ -390,10 +386,6 @@ class CompatiblePprofProfileBuilder(PprofProfileBuilder):
             return values
 
         if sample.sample_type == "memory.heap.bytes":
-            values[10] = sample.value
-            return values
-
-        if sample.sample_type == "memory.heap.objects":
             values[8] = sample.value
             return values
 
@@ -407,9 +399,7 @@ class CompatiblePprofProfileBuilder(PprofProfileBuilder):
             ("thread id", sample.thread_id),
             ("thread name", sample.thread_name),
         ):
-            labels.append(
-                self._string_label(key, value, dictionary)
-            )
+            labels.append(self._string_label(key, value, dictionary))
 
         if sample.trace_id:
             labels.append(

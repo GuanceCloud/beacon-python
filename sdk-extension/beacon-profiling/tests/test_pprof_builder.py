@@ -49,6 +49,7 @@ def test_compatible_pprof_builder_produces_legacy_python_layout():
             thread_id=1,
             thread_name="main",
             frames=(frame,),
+            cpu_time_ns=250,
         ),
         CapturedSample(
             timestamp_unix_nano=now + 1,
@@ -82,6 +83,15 @@ def test_compatible_pprof_builder_produces_legacy_python_layout():
             sample_type="lock.acquire.duration",
             sample_unit="nanoseconds",
         ),
+        CapturedSample(
+            timestamp_unix_nano=now + 4,
+            thread_id=5,
+            thread_name="memory",
+            frames=(frame,),
+            value=12,
+            sample_type="memory.heap.objects",
+            sample_unit="count",
+        ),
     ]
 
     payload = builder.build(
@@ -109,18 +119,17 @@ def test_compatible_pprof_builder_produces_legacy_python_layout():
         ("lock-acquire-wait", "nanoseconds"),
         ("lock-release", "count"),
         ("lock-release-hold", "nanoseconds"),
-        ("alloc-samples", "count"),
-        ("alloc-space", "bytes"),
         ("heap-space", "bytes"),
     ]
     assert string_table[profile.period_type.type] == "time"
     assert string_table[profile.period_type.unit] == "nanoseconds"
     assert len(profile.mapping) == 1
     assert string_table[profile.mapping[0].filename] == "svc"
-    assert profile.sample[0].value == [1, 1000, 1000, 0, 0, 0, 0, 0, 0, 0, 0]
-    assert profile.sample[1].value == [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
-    assert profile.sample[2].value == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2048]
-    assert profile.sample[3].value == [0, 0, 0, 0, 1, 123, 0, 0, 0, 0, 0]
+    assert profile.sample[0].value == [1, 250, 1000, 0, 0, 0, 0, 0, 0]
+    assert profile.sample[1].value == [0, 0, 0, 1, 0, 0, 0, 0, 0]
+    assert profile.sample[2].value == [0, 0, 0, 0, 0, 0, 0, 0, 2048]
+    assert profile.sample[3].value == [0, 0, 0, 0, 1, 123, 0, 0, 0]
+    assert len(profile.sample) == 4
     labels = {
         string_table[label.key]: string_table[label.str]
         for label in profile.sample[1].label

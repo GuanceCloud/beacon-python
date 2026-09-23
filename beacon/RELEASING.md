@@ -15,14 +15,14 @@
 
 1. 在完成接收端及环境验收后，确认 `version.properties` 中的候选版号，运行 `python beacon/scripts/check-version.py --sync`，核对锁文件并提交。CI 的 [ci.yml](../.github/workflows/ci.yml) 在 Python 3.10–3.14 的干净环境安装两个构建制品、检查元数据并测试自有包；发布前还须确认该提交的 CI 全部通过。
 2. 仓库管理员在 GitHub 创建 `pypi-profiling` 和 `pypi` 两个 Environment，均限制为 `beacon-v*` 标签并设置人工审核；在 PyPI 分别为 `beacon-profiling`、`beacon-otel` 配置待生效的 Trusted Publisher，均指向 `GuanceCloud/beacon-python` 和 `beacon-release.yml`，但环境分别填写 `pypi-profiling`、`pypi`。PyPI 会拒绝同一仓库、工作流和环境组合用于两个不同名称的待创建项目；首版采用不同环境，正式项目创建后再按需评估合并。确认这些保护生效后，才将仓库变量 `BEACON_PYPI_RELEASE_ENABLED` 设为 `true`。没有这些设置时[发布工作流](../.github/workflows/beacon-release.yml)只会跳过，不会尝试上传。不要把 PyPI 令牌写入仓库。
-3. 仅在实际验收通过后给已验证提交打 `beacon-v0.1.0rc1`（或正式版）标签并推送。手动在该标签上运行 `Publish Beacon Python`；构建和测试通过后先发布 Profiling，再发布主包。发布任务分别在受保护的 `pypi-profiling`、`pypi` 环境等待批准。PyPI 不允许覆盖同一版本，失败后修复应递增版本，不能重传已发布文件。
+3. 仅在实际验收通过后给已验证提交打 `beacon-vX.Y.ZrcN`（或正式版）标签并推送。手动在该标签上运行 `Publish Beacon Python`；构建和测试通过后先发布 Profiling，再发布主包。发布任务分别在受保护的 `pypi-profiling`、`pypi` 环境等待批准。PyPI 不允许覆盖同一版本，失败后修复应递增版本，不能重传已发布文件。
 4. 在 PyPI 核对两个包的版本和制品，再用全新虚拟环境从公开索引安装 `beacon-otel[profiling,requests]`，验证 `beacon --version`、应用自动插桩和目标 DataKit 接收。随后创建 GitHub Release，写明对应的 Contrib/Core 基线、已验证能力和环境、限制及回退方法；最后更新产品仓库的 Python 入口。
 
-GitHub 的 `pypi` 和 `pypi-profiling` Environment 均已创建，限定 `beacon-v*` 标签并要求 `lrwh` 人工审核；PyPI 两个 Pending Publisher 均已配置。`BEACON_PYPI_RELEASE_ENABLED` 未启用，且 `0.1.0rc1` 尚未打标签；本仓库代码推送或开发制品构建均不会自动发布。
+GitHub 的 `pypi` 和 `pypi-profiling` Environment 均已创建，限定 `beacon-v*` 标签并要求 `lrwh` 人工审核；PyPI Trusted Publisher 已完成配置，`0.1.0rc1` 已发布。`BEACON_PYPI_RELEASE_ENABLED` 日常保持关闭，仅在人工发布窗口临时启用；本仓库代码推送或开发制品构建均不会自动发布。
 
 首次发行前需要在本仓库确定并验证：
 
-1. 确认首版 `beacon-otel` 与 `beacon-profiling` 的功能边界、正式版本号及旧 Guance 包的迁移说明。当前两包的源码使用 `0.1.0rc1` 候选版本，但尚未发布；旧 `guance-sdk-extension-profiling` 与 Beacon Profiling 不能混装，不得以旧 Guance 包的名称和版本覆盖既有制品。
+1. 确认 `beacon-otel` 与 `beacon-profiling` 的功能边界、正式版本号及旧 Guance 包的迁移说明。当前两包的源码使用 `0.1.0rc2` 候选版本；旧 `guance-sdk-extension-profiling` 与 Beacon Profiling 不能混装，不得以旧 Guance 包的名称和版本覆盖既有制品。
 2. 固定的 Contrib、Python Core、第三方依赖与许可证来源；从固定提交构建候选制品并记录摘要。
 3. 自有功能、上游影响范围、Python 运行环境、DataKit 接收端和升级回退的验证结果；将证据绑定同一提交和制品。
 4. 发布权限、目标仓库或包索引、发行审批及回退流程；不得启用继承的 OpenTelemetry 发布工作流来发布 Beacon。
