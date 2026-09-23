@@ -1,17 +1,17 @@
 # Beacon Python
 
-`beacon-otel` 是 Beacon Python 的主安装包。当前最新版本为候选版 `0.1.0rc2`，尚未发布稳定版。
+`beacon-otel` 是 Beacon Python 的主安装包。当前稳定版本为 `0.1.0`。
 
-安装主包和所需框架的自动插桩插件。例如，FastAPI 应用可安装当前候选版本：
+安装主包和所需框架的自动插桩插件。例如，FastAPI 应用可安装当前稳定版本：
 
 ```bash
-pip install 'beacon-otel[fastapi]==0.1.0rc2'
+pip install 'beacon-otel[fastapi]==0.1.0'
 ```
 
 需要 Profiling 时安装：
 
 ```bash
-pip install 'beacon-otel[fastapi,profiling]==0.1.0rc2'
+pip install 'beacon-otel[fastapi,profiling]==0.1.0'
 ```
 
 先激活安装 Beacon 的虚拟环境，再配置 OTLP 接收端并启动应用；也可以在 `beacon` 后传入该虚拟环境内可执行文件的完整路径：

@@ -1,6 +1,6 @@
 # Beacon Python 发行流程
 
-当前没有 Beacon Python 稳定版；`beacon-otel` 主包与 `beacon-profiling` 可选包已经按同一产品版本发布候选版本。继承的上游及历史上的 `gtrace` 包安装示例不是 Beacon 的发行证据；[产品入口](https://github.com/GuanceCloud/beacon)以实际发布标签为准。
+`beacon-otel` 主包与 `beacon-profiling` 可选包按同一产品版本发行。继承的上游及历史上的 `gtrace` 包安装示例不是 Beacon 的发行证据；[产品入口](https://github.com/GuanceCloud/beacon)以实际发布标签为准。
 
 对外产品名称统一为 Beacon Python，命令入口使用 `beacon`，不恢复或发布 `gtrace` 命令。发行包名为 `beacon-otel` 与 `beacon-profiling`。旧 `gtrace` 名称只用于历史分支和来源追溯；公共 PyPI 上的 [`beacon`](https://pypi.org/project/beacon/) 和 [`beacon-python`](https://pypi.org/project/beacon-python/) 已属于其他项目，不能直接用作本项目发行包名。
 
@@ -19,11 +19,11 @@
 4. 两个 PyPI 包发布成功后，工作流自动创建 GitHub Release，并附加两个包的 wheel 与 sdist；候选版本自动标记为 Pre-release，正式版按 GitHub 的版本规则参与 Latest 判定。任务重试时会复用已有 Release 并覆盖同名附件。核对自动生成的发布说明并补充对应的 Contrib/Core 基线、已验证能力和环境、限制及回退方法。
 5. 在 PyPI 核对两个包的版本和制品，再用全新虚拟环境从公开索引安装 `beacon-otel[profiling,requests]`，验证 `beacon --version`、应用自动插桩和目标 DataKit 接收；最后更新产品仓库的 Python 入口。
 
-GitHub 的 `pypi` 和 `pypi-profiling` Environment 均已创建，限定 `beacon-v*` 标签并要求 `lrwh` 人工审核；PyPI Trusted Publisher 已完成配置，`0.1.0rc1` 和 `0.1.0rc2` 已发布。`BEACON_PYPI_RELEASE_ENABLED` 日常保持关闭，仅在人工发布窗口临时启用；本仓库代码推送或开发制品构建均不会自动发布。
+GitHub 的 `pypi` 和 `pypi-profiling` Environment 均已创建，限定 `beacon-v*` 标签并要求 `lrwh` 人工审核；PyPI Trusted Publisher 已完成配置，`0.1.0rc1`、`0.1.0rc2` 和 `0.1.0` 已按本流程发布。`BEACON_PYPI_RELEASE_ENABLED` 日常保持关闭，仅在人工发布窗口临时启用；本仓库代码推送或开发制品构建均不会自动发布。
 
 稳定版发行前需要在本仓库确定并验证：
 
-1. 确认 `beacon-otel` 与 `beacon-profiling` 的功能边界、稳定版本号及旧 Guance 包的迁移说明。当前两包已发布 `0.1.0rc2` 候选版本；旧 `guance-sdk-extension-profiling` 与 Beacon Profiling 不能混装，不得以旧 Guance 包的名称和版本覆盖既有制品。
+1. 确认 `beacon-otel` 与 `beacon-profiling` 的功能边界、稳定版本号及旧 Guance 包的迁移说明。`0.1.0` 正式版基于已验收的 `0.1.0rc2` 功能基线；旧 `guance-sdk-extension-profiling` 与 Beacon Profiling 不能混装，不得以旧 Guance 包的名称和版本覆盖既有制品。
 2. 固定的 Contrib、Python Core、第三方依赖与许可证来源；从固定提交构建候选制品并记录摘要。
 3. 自有功能、上游影响范围、Python 运行环境、DataKit 接收端和升级回退的验证结果；将证据绑定同一提交和制品。
 4. 发布权限、目标仓库或包索引、发行审批及回退流程；不得启用继承的 OpenTelemetry 发布工作流来发布 Beacon。

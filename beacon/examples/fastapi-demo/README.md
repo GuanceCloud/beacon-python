@@ -1,6 +1,6 @@
 # Beacon Python FastAPI Demo
 
-这个 Demo 使用 `beacon-otel 0.1.0rc2`，用于验证：
+这个 Demo 使用 `beacon-otel 0.1.0`，用于验证：
 
 - FastAPI 服务端自动插桩；
 - `requests` 客户端自动插桩；
@@ -20,7 +20,7 @@ python -m pip install -r requirements.txt
 beacon --version
 ```
 
-应输出 `Beacon Python 0.1.0rc2`。
+应输出 `Beacon Python 0.1.0`。
 
 ## 连接 DataKit
 
