@@ -126,7 +126,9 @@ class ContextBridge:
     def _refresh_thread_from_asyncio_handle(
         self, thread_id: int, handle: asyncio.events.Handle
     ) -> None:
-        runtime_context_var = getattr(_RUNTIME_CONTEXT, "_current_context", None)
+        runtime_context_var = getattr(
+            _RUNTIME_CONTEXT, "_current_context", None
+        )
         handle_context = getattr(handle, "_context", None)
         if runtime_context_var is None or handle_context is None:
             return
@@ -143,15 +145,13 @@ class ContextBridge:
         span_context = span.get_span_context()
         with self._lock:
             if span_context.is_valid:
-                self._span_metadata_by_thread[thread_id] = self._build_metadata(
-                    span, span_context
+                self._span_metadata_by_thread[thread_id] = (
+                    self._build_metadata(span, span_context)
                 )
             else:
                 self._span_metadata_by_thread.pop(thread_id, None)
 
-    def _build_metadata(
-        self, span, span_context: SpanContext
-    ) -> SpanMetadata:
+    def _build_metadata(self, span, span_context: SpanContext) -> SpanMetadata:
         trace_type_value = None
         kind = getattr(span, "kind", None)
         if kind is not None:
