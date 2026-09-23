@@ -2,7 +2,7 @@
 
 Beacon Python 是 GuanceCloud 基于完整 OpenTelemetry Python Contrib 源码维护的 Python 自动插桩与增强工程，保留上游历史，按语言独立开发和发行。
 
-当前处于开发阶段，尚无 Beacon Python 正式发行包。上游 OpenTelemetry 包及既有 Guance PyPI 包的下载地址和支持声明，不代表 Beacon Python 的发行结果。
+当前仍处于预发布阶段，最新候选版本为 `0.1.0rc2`，已发布到 PyPI：[`beacon-otel`](https://pypi.org/project/beacon-otel/0.1.0rc2/) 与 [`beacon-profiling`](https://pypi.org/project/beacon-profiling/0.1.0rc2/)。候选版本不等于稳定版支持承诺；上游 OpenTelemetry 包及既有 Guance PyPI 包的下载地址和支持声明，也不代表 Beacon Python 的发行结果。
 
 ## 开发入口
 
@@ -33,4 +33,4 @@ Beacon Python 是 GuanceCloud 基于完整 OpenTelemetry Python Contrib 源码�
 - [OpenTelemetry Python Contrib](https://github.com/open-telemetry/opentelemetry-python-contrib)
 - [导入时的 Guance 自有实现](https://github.com/GuanceCloud/opentelemetry-python-contrib/tree/40b90737969d7dfd48a732a93a3a3734f55bff27)
 
-保留上游源码布局、包名和[许可证](LICENSE)。`beacon-otel` 与 `beacon-profiling` 已实现为独立开发包，但尚未正式发行；不以现有 Guance 包版本覆盖已发布制品。
+保留上游源码布局、包名和[许可证](LICENSE)。`beacon-otel` 与 `beacon-profiling` 作为独立包发布候选版本，不以现有 Guance 包版本覆盖已发布制品。
