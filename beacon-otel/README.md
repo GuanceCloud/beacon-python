@@ -1,17 +1,17 @@
 # Beacon Python
 
-`beacon-otel` 是 Beacon Python 的主安装包，当前仍处于开发阶段，尚未正式发布。
+`beacon-otel` 是 Beacon Python 的主安装包。当前最新版本为候选版 `0.1.0rc2`，尚未发布稳定版。
 
-以下是正式发布后的安装用法；目前请从本仓库构建开发制品验证。安装主包和所需框架的自动插桩插件。例如，FastAPI 应用可安装：
+安装主包和所需框架的自动插桩插件。例如，FastAPI 应用可安装当前候选版本：
 
 ```bash
-pip install 'beacon-otel[fastapi]'
+pip install 'beacon-otel[fastapi]==0.1.0rc2'
 ```
 
 需要 Profiling 时安装：
 
 ```bash
-pip install 'beacon-otel[fastapi,profiling]'
+pip install 'beacon-otel[fastapi,profiling]==0.1.0rc2'
 ```
 
 先激活安装 Beacon 的虚拟环境，再配置 OTLP 接收端并启动应用；也可以在 `beacon` 后传入该虚拟环境内可执行文件的完整路径：
@@ -22,7 +22,7 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 beacon uvicorn myapp:app
 ```
 
-`beacon --version` 显示 Beacon Python 产品版本。当前提供 `requests`、`flask`、`fastapi` 可选依赖；其他框架的自动插桩包可根据 OpenTelemetry 官方说明单独安装。安装包存在不代表所有框架和运行环境已获 Beacon 支持；首发支持范围以发行说明中的实际验收结果为准。
+`beacon --version` 显示 Beacon Python 产品版本。当前提供 `requests`、`flask`、`fastapi` 可选依赖；其他框架的自动插桩包可根据 OpenTelemetry 官方说明单独安装。安装包存在不代表所有框架和运行环境已获 Beacon 稳定版支持；支持范围以对应版本的发行说明和验收记录为准。
 
 可选依赖仅安装对应的自动插桩插件；应用框架本身仍由应用自行安装。不要在同一 Python 环境中混装旧版 `guance-sdk-extension-profiling`，其自动插桩入口会与 `beacon-profiling` 冲突。
 

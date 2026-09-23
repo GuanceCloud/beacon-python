@@ -1,13 +1,14 @@
 Beacon Profiling for Python
 ===========================
 
-This package is in development and has not been published as a Beacon
-release. The previously published Guance profiling package is a separate
-legacy release; see ``../../beacon/README.md`` in this repository for status.
+This package is in pre-release. The latest published version is
+``beacon-profiling==0.1.0rc2``; no stable Beacon release is available yet.
+The previously published Guance profiling package is a separate legacy
+release; see ``../../beacon/README.md`` in this repository for status.
 
 This package provides a Python profiling runtime for OpenTelemetry
-auto-instrumentation. The current implementation exports profiles via
-OTLP and supports multiple collector types:
+auto-instrumentation. The current implementation exports profiles via OTLP
+or a compatible pprof endpoint and supports multiple collector types:
 
 * stack sampling
 * handled exceptions
