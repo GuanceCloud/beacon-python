@@ -146,8 +146,8 @@ opentelemetry-instrumentation-openai-v2 = { workspace = true }
 [tool.uv.workspace]
 members = [
   "beacon-otel",
-  "instrumentation/*",
-  "instrumentation-genai/*",
+  "instrumentation/opentelemetry-*",
+  "instrumentation-genai/opentelemetry-*",
   "exporter/*",
   "sdk-extension/*",
   "opentelemetry-instrumentation",
